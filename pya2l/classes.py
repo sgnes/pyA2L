@@ -228,7 +228,7 @@ class ANNOTATION_TEXT(Keyword):
 class ARRAY_SIZE(Keyword):
     attrs = [
         (Uint, "Number")    # Number of measurement values included in respective measurement
-                            # object  (maximum    value  of  ‘Number’: 32767).
+                            # object  (maximum    value  of  ï¿½Numberï¿½: 32767).
     ]
     # The use of this keyword should be replaced by MATRIX_DIM.
 
@@ -850,9 +850,104 @@ class IDENTIFICATION(Keyword):
     ]
 
 
+class CAN_ID_VARIABLE(Keyword):
+    pass
+
+class REDUCTION_ALLOWED(Keyword):
+    pass
+
+class EXCLUSIVE(Keyword):
+    multiple = True
+    attrs = [
+        (Int, "Exclusive")
+    ]
+
+class RASTER(Keyword):
+    multiple = True
+    attrs = [
+        (String, "RasterName"),
+        (String, "RasterShortName"),
+        (Int, "RasterID"),
+        (Int, "ScalingUnit"),
+        (Ulong, "Rate")
+    ]
+
+class FIRST_PID(Keyword):
+    multiple = True
+    attrs = [
+        (String, "FirstPiD")
+    ]
+
+class LENGTH(Keyword):
+    multiple = True
+    attrs = [
+        (Int, "Length")
+    ]
+
+class CAN_ID_FIXED(Keyword):
+    multiple = True
+    attrs = [
+        (Ulong, "CanID")
+    ]
+
+class QP_BLOB(Keyword):
+    multiple = True
+    children = ['CAN_ID_FIXED', 'LENGTH','CAN_ID_VARIABLE', 'RASTER', 'EXCLUSIVE', 'REDUCTION_ALLOWED', 'FIRST_PID']
+
+    attrs = [
+        (Ulong, "Length"),
+
+    ]
+
+class SOURCE(Keyword):
+    multiple = True
+    children = ['QP_BLOB']
+    attrs = [
+        (String, "Name"),
+        (Int, "BasicScaling"),
+        (Int, "RateInScalingUnit")
+    ]
+
+class DEFINED_PAGES(Keyword):
+    multiple = True
+    children = ['RAM', 'ROM', 'FLASH', "EEPROM", 'RAM_INIT_BY_ECU', 'RAM_INIT_BY_TOOL', 'AUTO_FLASH_BACK', 'FLASH_BACK', 'DEFAULT']
+    attrs = [
+        (String, "Name"),
+        (Int, "LogicalNo"),
+        (Int, "AdressExtension"),
+        (Ulong, "BaseAddress"),
+        (Ulong, "MemPageSize"),
+    ]
+
+
+class TP_BLOB(Keyword):
+    multiple = True
+    children = ['CHECKSUM_PARAM', 'CAN_PARAM', 'BYTES_ONLY', "RESUME_SUPPORTED", 'STORE_SUPPORTED', 'DEFINED_PAGES']
+    attrs = [
+        (Int, "CCPVersion"),
+        (Int, "BlobVersion"),
+        (Ulong, "CrmId"),
+        (Ulong, "DtmId"),
+        (Uint, "EcuStationAddr"),
+        (Uint, "ByteOrder"),
+        (Ulong, "BAUDRATE"),
+        (String, "SAMPLE_POINT"),
+        (String, "SAMPLE_RATE"),
+        (String, "BTL_CYCLES"),
+        (String, "SJW"),
+        (Enum, "SYNC_EDGE", ('SINGLE', 'DUAL')),
+        (Enum, "DAQ_MODE", ('ALTERNATING', 'BURST')),
+        (Enum, "CONSISTENCY", ('DAQ', 'ODT')),
+        (Enum, "ADDRESS_EXTENSION", ('DAQ', 'ODT')),
+        (Uint, "OPTIONAL_CMD")
+    ]
+
+
+
 class IF_DATA(Keyword):
     multiple = True
     block = True
+    children = ['SOURCE', "RASTER", "TP_BLOB"]
     attrs = [
         (Ident, "Name") # The prefix "ASAP1B_" is reserved for ASAM and can be not used for proprietary Interfaces.
     ]
@@ -1615,6 +1710,8 @@ KEYWORD_MAP = {
     "CALIBRATION_HANDLE" : CALIBRATION_HANDLE,
     "CALIBRATION_HANDLE_TEXT" : CALIBRATION_HANDLE_TEXT,
     "CALIBRATION_METHOD" : CALIBRATION_METHOD,
+    "CAN_ID_FIXED" : CAN_ID_FIXED,
+    "CAN_ID_VARIABLE" : CAN_ID_VARIABLE,
     "CHARACTERISTIC" : CHARACTERISTIC,
     "COEFFS" : COEFFS,
     "COEFFS_LINEAR" : COEFFS_LINEAR,
@@ -1647,7 +1744,9 @@ KEYWORD_MAP = {
     "ECU_CALIBRATION_OFFSET" : ECU_CALIBRATION_OFFSET,
     "EPK" : EPK,
     "ERROR_MASK" : ERROR_MASK,
+    "EXCLUSIVE" : EXCLUSIVE,
     "EXTENDED_LIMITS" : EXTENDED_LIMITS,
+    "FIRST_PID" : FIRST_PID,
     "FIX_AXIS_PAR" : FIX_AXIS_PAR,
     "FIX_AXIS_PAR_DIST" : FIX_AXIS_PAR_DIST,
     "FIX_AXIS_PAR_LIST" : FIX_AXIS_PAR_LIST,
@@ -1673,6 +1772,7 @@ KEYWORD_MAP = {
     "IN_MEASUREMENT" : IN_MEASUREMENT,
     "LAYOUT" : LAYOUT,
     "LEFT_SHIFT" : LEFT_SHIFT,
+    "LENGTH" : LENGTH,
     "LOC_MEASUREMENT" : LOC_MEASUREMENT,
     "MAP_LIST" : MAP_LIST,
     "MATRIX_DIM" : MATRIX_DIM,
@@ -1707,9 +1807,12 @@ KEYWORD_MAP = {
     "PHYS_UNIT" : PHYS_UNIT,
     "PROJECT" : PROJECT,
     "PROJECT_NO" : PROJECT_NO,
+    "QP_BLOB": QP_BLOB,
+    "RASTER" : RASTER,
     "READ_ONLY" : READ_ONLY,
     "READ_WRITE" : READ_WRITE,
     "RECORD_LAYOUT" : RECORD_LAYOUT,
+    "REDUCTION_ALLOWED" : REDUCTION_ALLOWED,
     "REF_CHARACTERISTIC" : REF_CHARACTERISTIC,
     "REF_GROUP" : REF_GROUP,
     "REF_MEASUREMENT" : REF_MEASUREMENT,
@@ -1731,6 +1834,7 @@ KEYWORD_MAP = {
     "SHIFT_OP_5" : SHIFT_OP_5,
     "SIGN_EXTEND" : SIGN_EXTEND,
     "SI_EXPONENTS" : SI_EXPONENTS,
+    "SOURCE": SOURCE,
     "SRC_ADDR_X" : SRC_ADDR_X,
     "SRC_ADDR_Y" : SRC_ADDR_Y,
     "SRC_ADDR_Z" : SRC_ADDR_Z,

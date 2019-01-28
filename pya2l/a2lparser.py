@@ -103,13 +103,14 @@ class A2LWalker(object):
         self.parser = tree.parser
         self.level = 0
         self.blockStack = []
+        self.instList = []
 
     def run(self):
         a2lFile = self.tree
         if not a2lFile.children:
             return
         for child in a2lFile.children:
-            self.traverseBlock(child)
+            self.instList.append(self.traverseBlock(child))
 
     def isPrimitiveType(self, value):
         return isinstance(value, (self.parser.ValueStringContext, self.parser.ValueIntContext,
@@ -142,8 +143,6 @@ class A2LWalker(object):
         startTag, endTag = tree.kw0.text, tree.kw1.text
         print("{}{}".format(spaces, startTag))
 
-        if startTag == 'IF_DATA':
-            return
 
         klass = classes.KEYWORD_MAP.get(startTag)
 
@@ -173,7 +172,7 @@ class A2LWalker(object):
                     fetchAttrs = False
             else:
                 if isinstance(child, self.parser.ValueBlockContext):
-                    self.traverseBlock(child.children[0], level)
+                    self.instList.append(self.traverseBlock(child.children[0], level))
                 else:
                     param = child.getText()
                     if param in optionalParameters:
@@ -200,7 +199,7 @@ class A2LWalker(object):
                             print("      *", param)
         if varArgs:
                 pass
-        inst = classes.instanceFactory(startTag, **OrderedDict(args))
+        inst = classes.instanceFactory(startTag, **OrderedDict(args+optArgs))
         return inst
 
 
@@ -261,7 +260,8 @@ class A2LParser(object):
 
     def parseFromFileName(self, filename):
         fp = six.io.open(filename, encoding = "latin1")
-        self.parse(fp)
+        parser = self.parse(fp)
+        return parser
 
     def parseFromString(self, stringObj):
         self.parse(six.StringIO(stringObj))
@@ -281,4 +281,5 @@ class A2LParser(object):
         walker = A2LWalker(tree)
         walker.run()
         print("Finished walking.")
+        return walker
 

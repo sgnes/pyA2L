@@ -56,7 +56,7 @@ COMMENT:
 WS  :   (' ' | '\t' | '\r' | '\n') -> channel(HIDDEN)
     ;
 
-IDENT: [a-zA-Z_][a-zA-Z_0-9.]*;
+IDENT: [a-zA-Z_][a-zA-Z_0-9]*'['[0-9]*']';
 
 STRING:
     '"' ( ESC_SEQ | ~('\\'|'"') )* '"'
