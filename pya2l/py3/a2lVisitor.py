@@ -1,4 +1,4 @@
-# Generated from a2l.g4 by ANTLR 4.7
+# Generated from C:/Users/gsun5/Documents/Code/pyA2L/pya2l\a2l.g4 by ANTLR 4.7.2
 from antlr4 import *
 if __name__ is not None and "." in __name__:
     from .a2lParser import a2lParser

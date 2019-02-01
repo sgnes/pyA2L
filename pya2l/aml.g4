@@ -27,6 +27,7 @@
 grammar aml;
 
 amlFile:
+    'ASAP2_VERSION' INT INT
    '/begin' 'A2ML'
         (d += declaration)*
    '/end' 'A2ML'
@@ -160,7 +161,10 @@ identifierValue:
 /*
 ** Lexer
 */
-ID  : ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_')*
+
+ASAP2_VERSION: 'ASAP2_VERSION';
+
+ID  : ('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'0'..'9'|'_'|'.'|'['|']')*
     ;
 
 TAG:  '"' ID '"'  // s. 3.2
@@ -170,6 +174,7 @@ TAG:  '"' ID '"'  // s. 3.2
 //   ;
 
 INT : '0'..'9'+
+    | ('+'|'-')? '0'..'9'+
     ;
 
 HEX:   '0'('x' | 'X') ('a' .. 'f' | 'A' .. 'F' | '0' .. '9')+
@@ -177,8 +182,10 @@ HEX:   '0'('x' | 'X') ('a' .. 'f' | 'A' .. 'F' | '0' .. '9')+
 
 FLOAT
     :   ('0'..'9')+ '.' ('0'..'9')* EXPONENT?
+    | ('+'|'-')? ('0'..'9')+ '.' ('0'..'9')* EXPONENT?
     |   '.' ('0'..'9')+ EXPONENT?
     |   ('0'..'9')+ EXPONENT
+    | ('+'|'-')? ('0'..'9')+ EXPONENT
     ;
 
 COMMENT

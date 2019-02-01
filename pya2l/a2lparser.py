@@ -110,7 +110,7 @@ class A2LWalker(object):
         if not a2lFile.children:
             return
         for child in a2lFile.children:
-            self.instList.append(self.traverseBlock(child))
+            self.instList.append((self.traverseBlock(child), 0))
 
     def isPrimitiveType(self, value):
         return isinstance(value, (self.parser.ValueStringContext, self.parser.ValueIntContext,
@@ -141,7 +141,7 @@ class A2LWalker(object):
         level += 1
         spaces = "  " * level
         startTag, endTag = tree.kw0.text, tree.kw1.text
-        print("{}{}".format(spaces, startTag))
+        #print("{}{}".format(spaces, startTag))
 
 
         klass = classes.KEYWORD_MAP.get(startTag)
@@ -166,13 +166,13 @@ class A2LWalker(object):
                     #print(self.getValue(child))
                     args.append((fixedParameters[argCount], self.getValue(child)))
                 else:
-                    print("att error")
+                    print("att error" + child.getText())
                 argCount += 1
                 if argCount >= numParameters:
                     fetchAttrs = False
             else:
                 if isinstance(child, self.parser.ValueBlockContext):
-                    self.instList.append(self.traverseBlock(child.children[0], level))
+                    self.instList.append(((self.traverseBlock(child.children[0], level)), level))
                 else:
                     param = child.getText()
                     if param in optionalParameters:
@@ -196,7 +196,7 @@ class A2LWalker(object):
                             result = self.fetchTuples(numberOfTriples, 3, CompuVTabRange, children, self.getValue(child))
                             print(result)
                         else:
-                            print("      *", param)
+                            print("Error:      *", param)
         if varArgs:
                 pass
         inst = classes.instanceFactory(startTag, **OrderedDict(args+optArgs))
@@ -218,7 +218,6 @@ class A2LWalker(object):
             else:
                 print("error")
         inst = classes.instanceFactory(name, **OrderedDict(zip(parameters, args)))
-        print(inst)
         return inst
 
     def fetchVariableParameters(self, name, iter):

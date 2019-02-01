@@ -1,9 +1,10 @@
-# Generated from a2l.g4 by ANTLR 4.7
+# Generated from C:/Users/gsun5/Documents/Code/pyA2L/pya2l\a2l.g4 by ANTLR 4.7.2
 # encoding: utf-8
 from antlr4 import *
 from io import StringIO
 from typing.io import TextIO
 import sys
+
 
 def serializedATN():
     with StringIO() as buf:
@@ -63,9 +64,10 @@ class a2lParser ( Parser ):
 
     def __init__(self, input:TokenStream, output:TextIO = sys.stdout):
         super().__init__(input, output)
-        self.checkVersion("4.7")
+        self.checkVersion("4.7.2")
         self._interp = ParserATNSimulator(self, self.atn, self.decisionsToDFA, self.sharedContextCache)
         self._predicates = None
+
 
 
 
@@ -128,6 +130,7 @@ class a2lParser ( Parser ):
             self.exitRule()
         return localctx
 
+
     class VersionContext(ParserRuleContext):
 
         def __init__(self, parser, parent:ParserRuleContext=None, invokingState:int=-1):
@@ -184,6 +187,7 @@ class a2lParser ( Parser ):
         finally:
             self.exitRule()
         return localctx
+
 
     class BlockContext(ParserRuleContext):
 
@@ -264,6 +268,7 @@ class a2lParser ( Parser ):
         finally:
             self.exitRule()
         return localctx
+
 
     class ValueContext(ParserRuleContext):
 

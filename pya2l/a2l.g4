@@ -24,7 +24,63 @@
 //  Requires ANTLR >= 4.5.1 !!!
 //
 
-lexer grammar a2l;
+grammar a2l;
+
+/*
+//amlFile:
+//   BEGIN
+//        (declaration)*
+//   END
+//   ;
+/*
+json:   obj
+    |   array
+    ;
+obj
+    :   '{' pair (',' pair)* '}'    # AnObject
+    |   '{' '}'                     # EmptyObject
+    ;
+array
+    :   '[' value (',' value)* ']'  # ArrayOfValues
+    |   '[' ']'                     # EmptyArray
+    ;
+pair:   STRING ':' value ;
+value
+    :   STRING      # String
+    |   NUMBER      # Atom
+    |   obj         # ObjectValue
+    |   array       # ArrayValue
+    |   'true'      # Atom
+    |   'false'     # Atom
+    |   'null'      # Atom
+    ;
+*/
+
+a2lFile:
+    version?
+    block;
+
+version:
+    ASAP2_VERSION v0 = INT v1 = INT;
+
+block:
+    BEGIN  kw0 = IDENT value* END kw1 = IDENT
+    //INCLDUE STRING
+    ;
+
+value:
+      IDENT     # valueIdent
+     | STRING   # valueString
+     | INT      # valueInt
+     | HEX      # valueHex
+     | FLOAT    # valueFloat
+     | block    # valueBlock
+    ;
+
+ASAP2_VERSION: 'ASAP2_VERSION';
+
+INCLUDE: '/include';
+
 
 BEGIN:
     '/begin'
@@ -41,9 +97,9 @@ HEX:   '0'('x' | 'X') ('a' .. 'f' | 'A' .. 'F' | '0' .. '9')+
     ;
 
 FLOAT:
-    ('0'..'9')+ '.' ('0'..'9')* EXPONENT?
-    |   '.' ('0'..'9')+ EXPONENT?
-    |   ('0'..'9')+ EXPONENT
+    ('+'|'-')?('0'..'9')+ '.' ('0'..'9')* EXPONENT?
+    |   ('+'|'-')?'.' ('0'..'9')+ EXPONENT?
+    |   ('+'|'-')?('0'..'9')+ EXPONENT
     ;
 
 COMMENT:
@@ -56,7 +112,9 @@ COMMENT:
 WS  :   (' ' | '\t' | '\r' | '\n') -> channel(HIDDEN)
     ;
 
-IDENT: [a-zA-Z_][a-zA-Z_0-9]*'['[0-9]*']';
+IDENT: [a-zA-Z_][a-zA-Z_0-9.]*('['[0-9]*']')*
+    | [a-zA-Z_][a-zA-Z_0-9.]*('['[0-9]*']')* '.' IDENT
+    ;
 
 STRING:
     '"' ( ESC_SEQ | ~('\\'|'"') )* '"'
