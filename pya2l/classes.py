@@ -849,6 +849,40 @@ class IDENTIFICATION(Keyword):
         (Datatype, "Datatype")
     ]
 
+class RAM(Keyword):
+    pass
+
+
+class ROM(Keyword):
+    pass
+
+
+class FLASH(Keyword):
+    pass
+
+
+class EEPROM(Keyword):
+    pass
+
+
+class RAM_INIT_BY_ECU(Keyword):
+    pass
+
+
+class RAM_INIT_BY_TOOL(Keyword):
+    pass
+
+
+class AUTO_FLASH_BACK(Keyword):
+    pass
+
+
+class FLASH_BACK(Keyword):
+    pass
+
+
+class DEFAULT(Keyword):
+    pass
 
 class CAN_ID_VARIABLE(Keyword):
     pass
@@ -872,6 +906,12 @@ class RASTER(Keyword):
         (Ulong, "Rate")
     ]
 
+class RASTERAttr(Keyword):
+    multiple = True
+    attrs = [
+        (Int, "RasterNr"),
+    ]
+
 class FIRST_PID(Keyword):
     multiple = True
     attrs = [
@@ -881,7 +921,7 @@ class FIRST_PID(Keyword):
 class LENGTH(Keyword):
     multiple = True
     attrs = [
-        (Int, "Length")
+        (Int, "LENGTH")
     ]
 
 class CAN_ID_FIXED(Keyword):
@@ -908,6 +948,8 @@ class SOURCE(Keyword):
         (Int, "RateInScalingUnit")
     ]
 
+
+
 class DEFINED_PAGES(Keyword):
     multiple = True
     children = ['RAM', 'ROM', 'FLASH', "EEPROM", 'RAM_INIT_BY_ECU', 'RAM_INIT_BY_TOOL', 'AUTO_FLASH_BACK', 'FLASH_BACK', 'DEFAULT']
@@ -919,10 +961,117 @@ class DEFINED_PAGES(Keyword):
         (Ulong, "MemPageSize"),
     ]
 
+class CHECKSUM_CALCULATION(Keyword):
+    multiple = True
+    children = []
+    attrs = [
+        (Enum, "CHECKSUM_CALCULATION", ('ACTIVE_PAGE', 'BIT_OR_WITH_OPT_PAGE'))
+    ]
+
+
+class CHECKSUM_PARAM(Keyword):
+    multiple = True
+    children = ['CHECKSUM_CALCULATION']
+    attrs = [
+        (Int, "CheckSumProc"),
+        (Ulong, "MaxBlkSize")
+    ]
+
+class DAQ_MODE(Keyword):
+    multiple = True
+    children = []
+    attrs = [
+        (Enum, "DAQ_MODE", ('ALTERNATING', 'BURST'))
+    ]
+
+class CONSISTENCY(Keyword):
+    multiple = True
+    children = []
+    attrs = [
+        (Enum, "CONSISTENCY", ('DAQ', 'ODT'))
+    ]
+
+class ADDRESS_EXTENSION(Keyword):
+    multiple = True
+    children = []
+    attrs = [
+        (Enum, "ADDRESS_EXTENSION", ('DAQ', 'ODT'))
+    ]
+
+class BYTES_ONLY(Keyword):
+    pass
+
+class RESUME_SUPPORTED(Keyword):
+    pass
+
+class STORE_SUPPORTED(Keyword):
+    pass
+
+class OPTIONAL_CMD(Keyword):
+    multiple = True
+    children = []
+    attrs = [
+        (Uint, "OPTIONAL_CMD")
+    ]
+
+class CAN_PARAM(Keyword):
+    multiple = True
+    children = []
+    attrs = [
+        (Uint, "QuartzFreq"),
+        (String, "BTR0"),
+        (String, "BTR1")
+    ]
+
+
+class BAUDRATE(Keyword):
+    multiple = True
+    children = []
+    attrs = [
+        (Ulong, "BAUDRATE")
+    ]
+
+class SAMPLE_POINT(Keyword):
+    multiple = True
+    children = []
+    attrs = [
+        (String, "SAMPLE_POINT")
+    ]
+
+class SAMPLE_RATE(Keyword):
+    multiple = True
+    children = []
+    attrs = [
+        (String, "SAMPLE_RATE")
+    ]
+
+class BTL_CYCLES(Keyword):
+    multiple = True
+    children = []
+    attrs = [
+        (String, "BTL_CYCLES")
+    ]
+
+class SJW(Keyword):
+    multiple = True
+    children = []
+    attrs = [
+        (String, "SJW")
+    ]
+
+class SYNC_EDGE(Keyword):
+    multiple = True
+    children = []
+    attrs = [
+        (Enum, "SYNC_EDGE", ('SINGLE', 'DUAL'))
+    ]
 
 class TP_BLOB(Keyword):
     multiple = True
-    children = ['CHECKSUM_PARAM', 'CAN_PARAM', 'BYTES_ONLY', "RESUME_SUPPORTED", 'STORE_SUPPORTED', 'DEFINED_PAGES']
+    children = ['DAQ_MODE', "CONSISTENCY", 'ADDRESS_EXTENSION', 'BYTES_ONLY',
+                'CHECKSUM_PARAM', 'OPTIONAL_CMD', 'CAN_PARAM', 'BAUDRATE', 'SAMPLE_POINT'
+                'SAMPLE_RATE', 'BTL_CYCLES', 'SJW' , 'SYNC_EDGE',
+                "RESUME_SUPPORTED", 'STORE_SUPPORTED', 'DEFINED_PAGES']
     attrs = [
         (Int, "CCPVersion"),
         (Int, "BlobVersion"),
@@ -930,16 +1079,6 @@ class TP_BLOB(Keyword):
         (Ulong, "DtmId"),
         (Uint, "EcuStationAddr"),
         (Uint, "ByteOrder"),
-        (Ulong, "BAUDRATE"),
-        (String, "SAMPLE_POINT"),
-        (String, "SAMPLE_RATE"),
-        (String, "BTL_CYCLES"),
-        (String, "SJW"),
-        (Enum, "SYNC_EDGE", ('SINGLE', 'DUAL')),
-        (Enum, "DAQ_MODE", ('ALTERNATING', 'BURST')),
-        (Enum, "CONSISTENCY", ('DAQ', 'ODT')),
-        (Enum, "ADDRESS_EXTENSION", ('DAQ', 'ODT')),
-        (Uint, "OPTIONAL_CMD")
     ]
 
 
@@ -1678,6 +1817,7 @@ KEYWORD_MAP = {
     "A2ML" : A2ML,
     "A2ML_VERSION" : A2ML_VERSION,
     "ADDR_EPK" : ADDR_EPK,
+    "ADDRESS_EXTENSION" : ADDRESS_EXTENSION,
     "ALIGNMENT_BYTE" : ALIGNMENT_BYTE,
     "ALIGNMENT_FLOAT32_IEEE" : ALIGNMENT_FLOAT32_IEEE,
     "ALIGNMENT_FLOAT64_IEEE" : ALIGNMENT_FLOAT64_IEEE,
@@ -1690,6 +1830,7 @@ KEYWORD_MAP = {
     "ANNOTATION_TEXT" : ANNOTATION_TEXT,
     "ARRAY_SIZE" : ARRAY_SIZE,
     "ASAP2_VERSION" : ASAP2_VERSION,
+    "AUTO_FLASH_BACK" : AUTO_FLASH_BACK,
     "AXIS_DESCR" : AXIS_DESCR,
     "AXIS_PTS" : AXIS_PTS,
     "AXIS_PTS_REF" : AXIS_PTS_REF,
@@ -1703,16 +1844,22 @@ KEYWORD_MAP = {
     "AXIS_RESCALE_Z" : AXIS_RESCALE_Z,
     "AXIS_RESCALE_4" : AXIS_RESCALE_4,
     "AXIS_RESCALE_5" : AXIS_RESCALE_5,
+    "BAUDRATE" : BAUDRATE,
+    "BYTES_ONLY" : BYTES_ONLY,
     "BIT_MASK" : BIT_MASK,
     "BIT_OPERATION" : BIT_OPERATION,
     "BYTE_ORDER" : BYTE_ORDER,
+    "BTL_CYCLES" : BTL_CYCLES,
     "CALIBRATION_ACCESS" : CALIBRATION_ACCESS,
     "CALIBRATION_HANDLE" : CALIBRATION_HANDLE,
     "CALIBRATION_HANDLE_TEXT" : CALIBRATION_HANDLE_TEXT,
     "CALIBRATION_METHOD" : CALIBRATION_METHOD,
     "CAN_ID_FIXED" : CAN_ID_FIXED,
     "CAN_ID_VARIABLE" : CAN_ID_VARIABLE,
+    "CAN_PARAM" : CAN_PARAM,
     "CHARACTERISTIC" : CHARACTERISTIC,
+    "CHECKSUM_CALCULATION" : CHECKSUM_CALCULATION,
+    "CHECKSUM_PARAM" : CHECKSUM_PARAM,
     "COEFFS" : COEFFS,
     "COEFFS_LINEAR" : COEFFS_LINEAR,
     "COMPARISON_QUANTITY" : COMPARISON_QUANTITY,
@@ -1721,14 +1868,18 @@ KEYWORD_MAP = {
     "COMPU_TAB_REF" : COMPU_TAB_REF,
     "COMPU_VTAB" : COMPU_VTAB,
     "COMPU_VTAB_RANGE" : COMPU_VTAB_RANGE,
+    "CONSISTENCY" : CONSISTENCY,
     "CPU_TYPE" : CPU_TYPE,
     "CURVE_AXIS_REF" : CURVE_AXIS_REF,
     "CUSTOMER" : CUSTOMER,
     "CUSTOMER_NO" : CUSTOMER_NO,
     "DATA_SIZE" : DATA_SIZE,
+    "DAQ_MODE" : DAQ_MODE,
     "DEF_CHARACTERISTIC" : DEF_CHARACTERISTIC,
+    "DEFAULT" : DEFAULT,
     "DEFAULT_VALUE" : DEFAULT_VALUE,
     "DEFAULT_VALUE_NUMERIC" : DEFAULT_VALUE_NUMERIC,
+    "DEFINED_PAGES" : DEFINED_PAGES,
     "DEPENDENT_CHARACTERISTIC" : DEPENDENT_CHARACTERISTIC,
     "DEPOSIT" : DEPOSIT,
     "DISCRETE" : DISCRETE,
@@ -1742,6 +1893,7 @@ KEYWORD_MAP = {
     "ECU_ADDRESS" : ECU_ADDRESS,
     "ECU_ADDRESS_EXTENSION" : ECU_ADDRESS_EXTENSION,
     "ECU_CALIBRATION_OFFSET" : ECU_CALIBRATION_OFFSET,
+    "EEPROM" : EEPROM,
     "EPK" : EPK,
     "ERROR_MASK" : ERROR_MASK,
     "EXCLUSIVE" : EXCLUSIVE,
@@ -1756,6 +1908,8 @@ KEYWORD_MAP = {
     "FIX_NO_AXIS_PTS_4" : FIX_NO_AXIS_PTS_4,
     "FIX_NO_AXIS_PTS_5" : FIX_NO_AXIS_PTS_5,
     "FNC_VALUES" : FNC_VALUES,
+    "FLASH" : FLASH,
+    "FLASH_BACK": FLASH_BACK,
     "FORMAT" : FORMAT,
     "FORMULA" : FORMULA,
     "FORMULA_INV" : FORMULA_INV,
@@ -1802,13 +1956,18 @@ KEYWORD_MAP = {
     "OFFSET_Z" : OFFSET_Z,
     "OFFSET_4" : OFFSET_4,
     "OFFSET_5" : OFFSET_5,
+    "OPTIONAL_CMD" : OPTIONAL_CMD,
     "OUT_MEASUREMENT" : OUT_MEASUREMENT,
     "PHONE_NO" : PHONE_NO,
     "PHYS_UNIT" : PHYS_UNIT,
     "PROJECT" : PROJECT,
     "PROJECT_NO" : PROJECT_NO,
     "QP_BLOB": QP_BLOB,
+    "RAM" : RAM,
+    "RAM_INIT_BY_ECU" : RAM_INIT_BY_ECU,
+    "RAM_INIT_BY_TOOL" : RAM_INIT_BY_TOOL,
     "RASTER" : RASTER,
+    "RASTERAttr" : RASTERAttr,
     "READ_ONLY" : READ_ONLY,
     "READ_WRITE" : READ_WRITE,
     "RECORD_LAYOUT" : RECORD_LAYOUT,
@@ -1819,6 +1978,8 @@ KEYWORD_MAP = {
     "REF_MEMORY_SEGMENT" : REF_MEMORY_SEGMENT,
     "REF_UNIT" : REF_UNIT,
     "RESERVED" : RESERVED,
+    "RESUME_SUPPORTED" : RESUME_SUPPORTED,
+    "ROM" : ROM,
     "RIGHT_SHIFT" : RIGHT_SHIFT,
     "RIP_ADDR_W" : RIP_ADDR_W,
     "RIP_ADDR_X" : RIP_ADDR_X,
@@ -1827,6 +1988,8 @@ KEYWORD_MAP = {
     "RIP_ADDR_4" : RIP_ADDR_4,
     "RIP_ADDR_5" : RIP_ADDR_5,
     "ROOT" : ROOT,
+    "SAMPLE_RATE" : SAMPLE_RATE,
+    "SAMPLE_POINT" : SAMPLE_POINT,
     "SHIFT_OP_X" : SHIFT_OP_X,
     "SHIFT_OP_Y" : SHIFT_OP_Y,
     "SHIFT_OP_Z" : SHIFT_OP_Z,
@@ -1834,6 +1997,7 @@ KEYWORD_MAP = {
     "SHIFT_OP_5" : SHIFT_OP_5,
     "SIGN_EXTEND" : SIGN_EXTEND,
     "SI_EXPONENTS" : SI_EXPONENTS,
+    "SJW" : SJW,
     "SOURCE": SOURCE,
     "SRC_ADDR_X" : SRC_ADDR_X,
     "SRC_ADDR_Y" : SRC_ADDR_Y,
@@ -1843,12 +2007,15 @@ KEYWORD_MAP = {
     "STATIC_RECORD_LAYOUT" : STATIC_RECORD_LAYOUT,
     "STATUS_STRING_REF" : STATUS_STRING_REF,
     "STEP_SIZE" : STEP_SIZE,
+    "STORE_SUPPORTED" : STORE_SUPPORTED,
     "SUB_FUNCTION" : SUB_FUNCTION,
     "SUB_GROUP" : SUB_GROUP,
     "SUPPLIER" : SUPPLIER,
     "SYMBOL_LINK" : SYMBOL_LINK,
+    "SYNC_EDGE" : SYNC_EDGE,
     "SYSTEM_CONSTANT" : SYSTEM_CONSTANT,
     "S_REC_LAYOUT" : S_REC_LAYOUT,
+    "TP_BLOB" : TP_BLOB,
     "UNIT" : UNIT,
     "UNIT_CONVERSION" : UNIT_CONVERSION,
     "USER" : USER,

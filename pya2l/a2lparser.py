@@ -176,7 +176,7 @@ class A2LWalker(object):
                 else:
                     param = child.getText()
                     if param in optionalParameters:
-                        optArgs.append((param, self.fetchOptionallArgument(param, children)))
+                        optArgs.append((param, self.fetchOptionallArgument(param, children, param == endTag)))
                     else:
                         if variableParameters:
                             varArgs = [self.getValue(child)]
@@ -203,7 +203,10 @@ class A2LWalker(object):
         return inst
 
 
-    def fetchOptionallArgument(self, name, iter):
+    def fetchOptionallArgument(self, name, iter, isTag):
+        if not isTag:
+            if name+"Attr" in classes.KEYWORD_MAP.keys():
+                name = name+"Attr"
         klass = classes.KEYWORD_MAP.get(name)
         parameters = klass.fixedAttributes
         args = []
