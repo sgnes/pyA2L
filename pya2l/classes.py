@@ -1069,7 +1069,7 @@ class SYNC_EDGE(Keyword):
 class TP_BLOB(Keyword):
     multiple = True
     children = ['DAQ_MODE', "CONSISTENCY", 'ADDRESS_EXTENSION', 'BYTES_ONLY',
-                'CHECKSUM_PARAM', 'OPTIONAL_CMD', 'CAN_PARAM', 'BAUDRATE', 'SAMPLE_POINT'
+                'CHECKSUM_PARAM', 'OPTIONAL_CMD', 'CAN_PARAM', 'BAUDRATE', 'SAMPLE_POINT',
                 'SAMPLE_RATE', 'BTL_CYCLES', 'SJW' , 'SYNC_EDGE',
                 "RESUME_SUPPORTED", 'STORE_SUPPORTED', 'DEFINED_PAGES']
     attrs = [
